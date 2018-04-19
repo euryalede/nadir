@@ -13,27 +13,25 @@
 /// or otherwise) arising in any way out of the use of this software, 
 /// even if advised of the possibility of such damage.
 ///
-///   File: Main_main.cpp
+///   File: Main.cpp
 ///
 /// Author: $author$
 ///   Date: 4/17/2018
 ///////////////////////////////////////////////////////////////////////
-#include "xos/console/Main_main.hpp"
-#include "xos/logger/Interface.hpp"
+#include "xos/app/console/nadir/Main.hpp"
 
 namespace xos {
+namespace app {
 namespace console {
+namespace nadir {
 
+///////////////////////////////////////////////////////////////////////
+///  Class: MainT
+///////////////////////////////////////////////////////////////////////
+static Main theMain;
+
+} /// namespace nadir
 } /// namespace console
+} /// namespace app
 } /// namespace xos
 
-///////////////////////////////////////////////////////////////////////
-/// Function: main
-///////////////////////////////////////////////////////////////////////
-int main(int argc, char** argv, char** env) {
-    int err = 0;
-    LOG_DEBUG("::xos::console::Main::TheMain(argc, argv, env)...")
-    err = ::xos::console::Main::TheMain(argc, argv, env);
-    LOG_DEBUG("..." << err << " = ::xos::console::Main::TheMain(argc, argv, env)")
-    return err;
-}

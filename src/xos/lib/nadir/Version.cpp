@@ -51,16 +51,16 @@ public:
     typedef TImplements Implements;
     typedef typename Implements::string_t string_t;
     VersionT() {}
-    virtual string_t name() const {
+    virtual string_t Name() const {
         return string_t(XOS_LIB_NADIR_VERSION_NAME);
     }
-    virtual unsigned major() const {
+    virtual unsigned Major() const {
         return XOS_LIB_NADIR_VERSION_MAJOR;
     }
-    virtual unsigned minor() const {
+    virtual unsigned Minor() const {
         return XOS_LIB_NADIR_VERSION_MINOR;
     }
-    virtual unsigned release() const {
+    virtual unsigned Release() const {
         return XOS_LIB_NADIR_VERSION_RELEASE;
     }
 };
