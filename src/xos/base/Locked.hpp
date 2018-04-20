@@ -41,7 +41,7 @@ enum {
     UnlockInvalid
 };
 template <class TString>
-inline const char* LockStatusToString(LockStatus status) {
+inline TString LockStatusToString(LockStatus status) {
     switch (status) {
     case LockSuccess: return TString("LockSuccess");
     case LockFailed: return TString("LockFailed");
@@ -84,42 +84,97 @@ public:
     }
 
     virtual string_t StatusToString() const {
-        return ExceptionStatusToString<string_t>(this->Status());
+        return LockStatusToString<string_t>(this->Status());
     }
 };
 typedef LockExceptionT<> LockException;
 
-typedef ImplementBase LockerTImplements;
-///////////////////////////////////////////////////////////////////////
-///  Class: LockerT
-///////////////////////////////////////////////////////////////////////
-template <class TImplements = LockerTImplements>
-class _EXPORT_CLASS LockerT: virtual public TImplements {
-public:
-    typedef TImplements Implements;
-};
-typedef LockerT<> Locker;
-
-typedef Locker LockedTImplements;
-typedef Base LockedTExtends;
+typedef ImplementBase LockedTImplements;
 ///////////////////////////////////////////////////////////////////////
 ///  Class: LockedT
 ///////////////////////////////////////////////////////////////////////
+template <class TImplements = LockedTImplements>
+class _EXPORT_CLASS LockedT: virtual public TImplements {
+public:
+    typedef TImplements Implements;
+
+    virtual bool Lock() { 
+        return false; 
+    }
+    virtual LockStatus TryLock() { 
+        return LockFailed; 
+    }
+    virtual LockStatus TimedLock(mseconds_t milliseconds) { 
+        return LockFailed; 
+    }
+    virtual LockStatus UntimedLock() { 
+        return LockFailed; 
+    }
+    virtual bool Unlock() { 
+        return false; 
+    }
+};
+typedef LockedT<> Locked;
+
+typedef Locked UnlockedTImplements;
+///////////////////////////////////////////////////////////////////////
+///  Class: UnlockedT
+///////////////////////////////////////////////////////////////////////
+template <class TImplements = UnlockedTImplements>
+class _EXPORT_CLASS UnlockedT: virtual public TImplements {
+public:
+    typedef TImplements Implements;
+
+    virtual bool Lock() { 
+        return true; 
+    }
+    virtual LockStatus TryLock() { 
+        return LockSuccess; 
+    }
+    virtual LockStatus TimedLock(mseconds_t milliseconds) { 
+        return LockSuccess; 
+    }
+    virtual LockStatus UntimedLock() { 
+        return LockSuccess; 
+    }
+    virtual bool Unlock() { 
+        return true; 
+    }
+};
+typedef UnlockedT<> Unlocked;
+
+typedef ImplementBase LockerTImplements;
+typedef Base LockerTExtends;
+///////////////////////////////////////////////////////////////////////
+///  Class: LockerT
+///////////////////////////////////////////////////////////////////////
 template 
-<class TImplements = LockedTImplements, class TExtends = LockedTExtends>
-class _EXPORT_CLASS LockedT: virtual public TImplements, public TExtends {
+<class TImplements = LockerTImplements, class TExtends = LockerTExtends>
+class _EXPORT_CLASS LockerT: virtual public TImplements, public TExtends {
 public:
     typedef TImplements Implements;
     typedef TExtends Extends;
 
-    LockedT(const LockedT &copy) {
+    LockerT(Locked& locked): _locked(locked) {
+        if (!(_locked.Lock())) {
+            const LockException e(LockFailed);
+            throw (e);
+        }
     }
-    LockedT() {
+    virtual ~LockerT() {
+        if (!(_locked.Unlock())) {
+            const LockException e(UnlockFailed);
+            throw (e);
+        }
     }
-    virtual ~LockedT() {
+private:
+    LockerT(const LockerT &copy) {
     }
+
+protected:
+    Locked& _locked;
 };
-typedef LockedT<> Locked;
+typedef LockerT<> Locker;
 
 } /// namespace xos
 

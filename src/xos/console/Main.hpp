@@ -41,12 +41,21 @@ public:
     typedef TExtends Extends;
 
     typedef TMainImplement main_t;
+    typedef typename Implements::io_t io_t;
     typedef typename Implements::char_t char_t;
     typedef typename Implements::endchar_t endchar_t;
     static const typename Implements::endchar_t endchar = Implements::endchar;
 
+    MainT(Locked& locked)
+    : _locked(locked), _didArguments(false), _didUsage(false), _didRun(false) {
+        main_t*& theMain = main_t::TheMain();
+        if (!(theMain)) {
+            theMain = this;
+        }
+    }
     MainT()
-    : _didArguments(false), _didUsage(false), _didRun(false) {
+    : _locked(io_t::TheIo(*this)), 
+      _didArguments(false), _didUsage(false), _didRun(false) {
         main_t*& theMain = main_t::TheMain();
         if (!(theMain)) {
             theMain = this;
@@ -129,7 +138,39 @@ protected:
         return _didRun;
     }
 
+    virtual bool Lock() { 
+        if (&_locked != this) {
+            return _locked.Lock();
+        }
+        return true; 
+    }
+    virtual LockStatus TryLock() { 
+        if (&_locked != this) {
+            return _locked.TryLock();
+        }
+        return LockSuccess; 
+    }
+    virtual LockStatus TimedLock(mseconds_t milliseconds) { 
+        if (&_locked != this) {
+            return _locked.TimedLock(milliseconds);
+        }
+        return LockSuccess; 
+    }
+    virtual LockStatus UntimedLock() { 
+        if (&_locked != this) {
+            return _locked.UntimedLock();
+        }
+        return LockSuccess; 
+    }
+    virtual bool Unlock() { 
+        if (&_locked != this) {
+            return _locked.Unlock();
+        }
+        return true; 
+    }
+
 protected:
+    Locked& _locked;
     bool _didArguments, _didUsage, _didRun;
 };
 typedef MainT<> Main;

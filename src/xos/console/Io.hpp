@@ -375,13 +375,26 @@ public:
     }
 
     virtual FILE* StdErr() const {
-        return stderr;
+        return ::stderr;
     }
     virtual FILE* StdOut() const {
-        return stdout;
+        return ::stdout;
     }
     virtual FILE* StdIn() const {
-        return stdin;
+        return ::stdin;
+    }
+
+    static IoT& TheIo(IoT& thisIo) {
+        IoT* theIo = TheIo();
+        if (theIo) {
+            return *theIo;
+        }
+        return thisIo;
+    }
+protected:
+    static IoT*& TheIo() {
+        static IoT* theIo = 0;
+        return theIo;
     }
 };
 typedef IoT<> Io;

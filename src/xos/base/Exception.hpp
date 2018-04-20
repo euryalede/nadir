@@ -31,7 +31,7 @@ enum {
     ExceptionFailed
 };
 template <class TString>
-inline const char* ExceptionStatusToString(ExceptionStatus status) {
+inline TString ExceptionStatusToString(ExceptionStatus status) {
     switch (status) {
     case ExceptionSuccess: return TString("ExceptionSuccess");
     case ExceptionFailed: return TString("ExceptionFailed");

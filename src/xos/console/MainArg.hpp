@@ -35,6 +35,7 @@ class _EXPORT_CLASS MainArgT: virtual public TImplements {
 public:
     typedef TImplements Implements;
     
+    typedef TImplements io_t;
     typedef typename Implements::char_t char_t;
     typedef typename Implements::endchar_t endchar_t;
     static const typename Implements::endchar_t endchar = Implements::endchar;
@@ -141,6 +142,7 @@ public:
     typedef TImplements Implements;
     
     typedef MainImplementT main_t;
+    typedef typename Implements::io_t io_t;
     typedef typename Implements::char_t char_t;
     typedef typename Implements::endchar_t endchar_t;
     static const typename Implements::endchar_t endchar = Implements::endchar;
