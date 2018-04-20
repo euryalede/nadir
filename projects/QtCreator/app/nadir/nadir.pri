@@ -52,13 +52,23 @@ $${nadir_DEFINES} \
 ########################################################################
 # nadir_exe HEADERS
 #
-#nadir_exe_HEADERS += \
-#$${NADIR_SRC}/nadir/base/Base.hpp \
+nadir_exe_HEADERS += \
+$${NADIR_SRC}/xos/console/Io.hpp \
+$${NADIR_SRC}/xos/console/MainArg.hpp \
+$${NADIR_SRC}/xos/console/Main.hpp \
+$${NADIR_SRC}/xos/console/Main_main.hpp \
+$${NADIR_SRC}/xos/console/getopt/MainOpt.hpp \
+$${NADIR_SRC}/xos/console/getopt/Main.hpp \
+$${NADIR_SRC}/xos/app/console/nadir/Main.hpp \
 
 # nadir_exe SOURCES
 #
-#nadir_exe_SOURCES += \
-#$${NADIR_SRC}/nadir/base/Base.cpp \
+nadir_exe_SOURCES += \
+$${NADIR_SRC}/xos/console/Io.cpp \
+$${NADIR_SRC}/xos/console/MainArg.cpp \
+$${NADIR_SRC}/xos/console/Main_main.cpp \
+$${NADIR_SRC}/xos/console/getopt/MainOpt.cpp \
+$${NADIR_SRC}/xos/app/console/nadir/Main.cpp \
 
 ########################################################################
 # nadir_exe FRAMEWORKS
