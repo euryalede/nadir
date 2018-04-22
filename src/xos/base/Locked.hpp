@@ -143,38 +143,45 @@ public:
 };
 typedef UnlockedT<> Unlocked;
 
-typedef ImplementBase LockerTImplements;
-typedef Base LockerTExtends;
+typedef ImplementBase LockTImplements;
+typedef Base LockTExtends;
 ///////////////////////////////////////////////////////////////////////
-///  Class: LockerT
+///  Class: LockT
 ///////////////////////////////////////////////////////////////////////
 template 
-<class TImplements = LockerTImplements, class TExtends = LockerTExtends>
-class _EXPORT_CLASS LockerT: virtual public TImplements, public TExtends {
+<class TImplements = LockTImplements, class TExtends = LockTExtends>
+class _EXPORT_CLASS LockT: virtual public TImplements, public TExtends {
 public:
     typedef TImplements Implements;
     typedef TExtends Extends;
 
-    LockerT(Locked& locked): _locked(locked) {
+    LockT(Locked& locked, mseconds_t milliseconds): _locked(locked) {
+        LockStatus status = LockFailed;
+        if (LockSuccess != (status = _locked.TimedLock(milliseconds))) {
+            const LockException e(status);
+            throw (e); 
+        }
+    }
+    LockT(Locked& locked): _locked(locked) {
         if (!(_locked.Lock())) {
             const LockException e(LockFailed);
             throw (e);
         }
     }
-    virtual ~LockerT() {
+    virtual ~LockT() {
         if (!(_locked.Unlock())) {
             const LockException e(UnlockFailed);
             throw (e);
         }
     }
 private:
-    LockerT(const LockerT &copy) {
+    LockT(const LockT &copy) {
     }
 
 protected:
     Locked& _locked;
 };
-typedef LockerT<> Locker;
+typedef LockT<> Lock;
 
 } /// namespace xos
 

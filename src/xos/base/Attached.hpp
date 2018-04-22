@@ -42,7 +42,7 @@ enum {
     DetachInvalid
 };
 template <class TString>
-inline const char* AttachStatusToString(AttachStatus status) {
+inline TString AttachStatusToString(AttachStatus status) {
     switch (status) {
     case AttachSuccess: return TString("AttachSuccess");
     case AttachFailed: return TString("AttachFailed");

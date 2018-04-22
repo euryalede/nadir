@@ -399,6 +399,73 @@ protected:
 };
 typedef IoT<> Io;
 
+namespace base {
+typedef console::Io IoTImplements;
+typedef Base IoTExtends;
+///////////////////////////////////////////////////////////////////////
+///  Class: IoT
+///////////////////////////////////////////////////////////////////////
+template 
+<class TImplements = IoTImplements, class TExtends = IoTExtends>
+
+class _EXPORT_CLASS IoT: virtual public TImplements, public TExtends {
+public:
+    typedef TImplements Implements;
+    typedef TExtends Extends;
+
+    typedef typename Implements::char_t char_t;
+    typedef typename Implements::endchar_t endchar_t;
+    static const endchar_t endchar = Implements::endchar;
+    typedef const char_t* const_chars_t;
+
+    IoT(Locked& locked): _locked(locked) {
+    }
+    IoT(): _locked(*this) {
+    }
+    virtual ~IoT() {
+    }
+private:
+    IoT(const IoT &copy): _locked(*this) {
+    }
+    
+protected:
+    virtual bool Lock() { 
+        if (&_locked != this) {
+            return _locked.Lock();
+        }
+        return true; 
+    }
+    virtual LockStatus TryLock() { 
+        if (&_locked != this) {
+            return _locked.TryLock();
+        }
+        return LockSuccess; 
+    }
+    virtual LockStatus TimedLock(mseconds_t milliseconds) { 
+        if (&_locked != this) {
+            return _locked.TimedLock(milliseconds);
+        }
+        return LockSuccess; 
+    }
+    virtual LockStatus UntimedLock() { 
+        if (&_locked != this) {
+            return _locked.UntimedLock();
+        }
+        return LockSuccess; 
+    }
+    virtual bool Unlock() { 
+        if (&_locked != this) {
+            return _locked.Unlock();
+        }
+        return true; 
+    }
+
+protected:
+    Locked& _locked;
+};
+typedef IoT<> Io;
+} /// namespace base
+
 } /// namespace console
 } /// namespace xos
 
